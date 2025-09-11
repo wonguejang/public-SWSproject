@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +23,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wg.dao.MemberDao;
 import com.wg.dto.Member.MemberDto;
 import com.wg.service.MailService;
@@ -193,15 +195,96 @@ public class loginController {
         return "success";
     }
 	
-	//구글 로그인
+//	//구글 로그인
+//	@RequestMapping("/google/callback")
+//	@ResponseBody // 중요: JSP 리턴 안 하고 HTML 반환
+//	public String googleCallback(@RequestParam("code") String code, HttpSession session) {
+//		System.out.println("googlecallback 진입완료");
+//	    // === 1. 액세스 토큰 요청 ===
+//	    String tokenUrl = "https://oauth2.googleapis.com/token";
+//
+//	    RestTemplate restTemplate = new RestTemplate();
+//	    HttpHeaders headers = new HttpHeaders();
+//	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//
+//	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//	    params.add("code", code);
+//	    params.add("client_id", clientId);
+//	    params.add("client_secret", clientSecret);
+//	    params.add("redirect_uri", "https://swsggwp.co.kr/google/callback");
+//	    params.add("grant_type", "authorization_code");
+//
+//	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+//	    ResponseEntity<Map> response = null;
+//	    try {
+//	    	response = restTemplate.postForEntity(tokenUrl, request, Map.class);
+//	    	System.out.println("response try: " +response);
+//	    }catch(HttpClientErrorException e) {
+//	    	System.out.println("respone catch : " + response);
+//	    	 System.out.println(">>> 상태코드: " + e.getStatusCode());
+//    	    System.out.println(">>> 응답본문: " + e.getResponseBodyAsString());
+//	    	e.printStackTrace();
+//	    }
+//	    System.out.println("code = " + code);
+//	    System.out.println("response status = " + response.getStatusCode());
+//	    System.out.println("response body = " + response.getBody());
+//
+//	    String accessToken = (String) response.getBody().get("access_token");
+//
+//	    // === 2. 사용자 정보 요청 ===
+//	    HttpHeaders infoHeaders = new HttpHeaders();
+//	    infoHeaders.setBearerAuth(accessToken);
+//	    HttpEntity<?> infoRequest = new HttpEntity<>(infoHeaders);
+//
+//	    ResponseEntity<Map> userInfoResponse = restTemplate.exchange(
+//	        "https://www.googleapis.com/oauth2/v2/userinfo",
+//	        HttpMethod.GET,
+//	        infoRequest,
+//	        Map.class
+//	        
+//	    );
+//	 // [3] 사용자 정보 추출
+//	    Map<String, Object> userInfo = userInfoResponse.getBody();
+//	    String email = (String) userInfo.get("email");
+//	    String name = (String) userInfo.get("name");
+//	    
+//	    // === 3. DB 등록 ===
+//	    MemberDto dto = dao.findById(email);
+//	    if (dto == null) {
+//	        dto = new MemberDto();
+//	        dto.setUserId(email);
+//	        dto.setUserName(name);
+//	        dto.setUserPw("google_oauth");
+//	        dto.setPwHint(null);
+//	        dto.setGrade(0);
+//	        dao.insert(dto);
+//	    }
+////	    System.out.println("유저아이디 : " +dto.getUserId());
+//	    
+//	    String id = dto.getUserId();
+//	    String userName = dto.getUserName();
+//	    session.setAttribute("id", id);
+//	    session.setAttribute("loginUser", dto);
+//	    session.setAttribute("userName", userName);
+////	    System.out.println("api로그인 시 닉네임 : " + userName);
+//	    // === 4. 팝업 닫고 메시지 전송 ===
+//	    return "<script>window.opener.postMessage('google-login-success', '*'); window.close();</script>";
+//	}
+	
+	// 구글 로그인 콜백
 	@RequestMapping("/google/callback")
-	@ResponseBody // 중요: JSP 리턴 안 하고 HTML 반환
-	public String googleCallback(@RequestParam("code") String code, HttpSession session) {
-		System.out.println("googlecallback 진입완료");
-	    // === 1. 액세스 토큰 요청 ===
-	    String tokenUrl = "https://oauth2.googleapis.com/token";
+	@ResponseBody
+	public String googleCallback(@RequestParam("code") String code, HttpSession session) throws Exception {
+	    System.out.println("googlecallback 진입완료");
+
+	    final String tokenUrl = "https://oauth2.googleapis.com/token";
 
 	    RestTemplate restTemplate = new RestTemplate();
+	    // 실패(4xx/5xx)여도 예외 던지지 않게 해서 본문/상태코드 확인
+	    restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+	        @Override public boolean hasError(ClientHttpResponse resp) { return false; }
+	    });
+
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -209,44 +292,47 @@ public class loginController {
 	    params.add("code", code);
 	    params.add("client_id", clientId);
 	    params.add("client_secret", clientSecret);
-	    params.add("redirect_uri", "http://localhost:9090/projectboard/google/callback");
+	    params.add("redirect_uri", "https://swsggwp.co.kr/google/callback"); // 콘솔과 100% 동일해야 함
 	    params.add("grant_type", "authorization_code");
 
 	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-	    ResponseEntity<Map> response = null;
-	    try {
-	    	response = restTemplate.postForEntity(tokenUrl, request, Map.class);
-	    	System.out.println("response try: " +response);
-	    }catch(HttpClientErrorException e) {
-	    	System.out.println("respone catch : " + response);
-	    	 System.out.println(">>> 상태코드: " + e.getStatusCode());
-    	    System.out.println(">>> 응답본문: " + e.getResponseBodyAsString());
-	    	e.printStackTrace();
+
+	    // 1) 토큰 교환
+	    ResponseEntity<String> tokenRes = restTemplate.postForEntity(tokenUrl, request, String.class);
+	    System.out.println("TOKEN EXCHANGE: " + tokenRes.getStatusCode() + " / " + tokenRes.getBody());
+
+	    if (!tokenRes.getStatusCode().is2xxSuccessful() || tokenRes.getBody() == null) {
+	        // 실패시 팝업 닫고 부모창에 실패 알림
+	        return "<script>window.opener.postMessage('google-login-fail','*');window.close();</script>";
 	    }
-	    System.out.println("code = " + code);
-	    System.out.println("response status = " + response.getStatusCode());
-	    System.out.println("response body = " + response.getBody());
 
-	    String accessToken = (String) response.getBody().get("access_token");
+	    Map<String,Object> tokenBody = new ObjectMapper().readValue(tokenRes.getBody(), Map.class);
+	    String accessToken = (String) tokenBody.get("access_token");
+	    if (accessToken == null) {
+	        return "<script>window.opener.postMessage('google-login-fail','*');window.close();</script>";
+	    }
 
-	    // === 2. 사용자 정보 요청 ===
+	    // 2) 사용자 정보
 	    HttpHeaders infoHeaders = new HttpHeaders();
 	    infoHeaders.setBearerAuth(accessToken);
-	    HttpEntity<?> infoRequest = new HttpEntity<>(infoHeaders);
+	    HttpEntity<?> infoReq = new HttpEntity<>(infoHeaders);
 
 	    ResponseEntity<Map> userInfoResponse = restTemplate.exchange(
 	        "https://www.googleapis.com/oauth2/v2/userinfo",
 	        HttpMethod.GET,
-	        infoRequest,
+	        infoReq,
 	        Map.class
-	        
 	    );
-	 // [3] 사용자 정보 추출
-	    Map<String, Object> userInfo = userInfoResponse.getBody();
+
+	    if (!userInfoResponse.getStatusCode().is2xxSuccessful() || userInfoResponse.getBody() == null) {
+	        return "<script>window.opener.postMessage('google-login-fail','*');window.close();</script>";
+	    }
+
+	    Map<String,Object> userInfo = userInfoResponse.getBody();
 	    String email = (String) userInfo.get("email");
-	    String name = (String) userInfo.get("name");
-	    
-	    // === 3. DB 등록 ===
+	    String name  = (String) userInfo.get("name");
+
+	    // 3) DB 처리
 	    MemberDto dto = dao.findById(email);
 	    if (dto == null) {
 	        dto = new MemberDto();
@@ -257,19 +343,15 @@ public class loginController {
 	        dto.setGrade(0);
 	        dao.insert(dto);
 	    }
-//	    System.out.println("유저아이디 : " +dto.getUserId());
-	    
-	    String id = dto.getUserId();
-	    String userName = dto.getUserName();
-	    session.setAttribute("id", id);
+
+	    session.setAttribute("id", dto.getUserId());
 	    session.setAttribute("loginUser", dto);
-	    session.setAttribute("userName", userName);
-//	    System.out.println("api로그인 시 닉네임 : " + userName);
-	    // === 4. 팝업 닫고 메시지 전송 ===
-	    return "<script>window.opener.postMessage('google-login-success', '*'); window.close();</script>";
+	    session.setAttribute("userName", dto.getUserName());
+
+	    // 4) 팝업 닫고 부모창에 성공 알림
+	    return "<script>window.opener.postMessage('google-login-success','*');window.close();</script>";
 	}
-	
-	
+
 	
 	
 	

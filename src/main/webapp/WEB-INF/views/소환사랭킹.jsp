@@ -644,11 +644,11 @@
 				<div>
 					<ul class = "menu-container">
 						<li>
-						<a href = "/projectboard/BUILD_BOARD3" id = "menu-hover">커뮤니티</a>
+						<a href = "${pageContext.request.contextPath}/BUILD_BOARD3" id = "menu-hover">커뮤니티</a>
 							<ul class = "sub-menu">
-								<li><a href = "/projectboard/BUILD_BOARD3">빌드 연구소</a></li>
+								<li><a href = "${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소</a></li>
 								<li><a href = "list">자유 게시판</a></li>
-								<li><a href = "/projectboard/patch/patchlist">패치 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a></li>
 							</ul>
 						</li>
 					</ul>

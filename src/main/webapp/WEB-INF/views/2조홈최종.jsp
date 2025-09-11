@@ -520,11 +520,11 @@
 				<div>
 					<ul class = "menu-container">
 						<li>
-						<a href = "/projectboard/list">커뮤니티</a>
+						<a href = "${pageContext.request.contextPath}/list">커뮤니티</a>
 							<ul class = "sub-menu">
-								<li><a href = "/projectboard/BUILD_BOARD3">빌드 연구소</a></li>
-								<li><a href = "/projectboard/list">자유 게시판</a></li>
-								<li><a href = "/projectboard/patch/patchlist">패치 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소</a></li>
+								<li><a href = "${pageContext.request.contextPath}/list">자유 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -610,7 +610,7 @@
 	<!-- 하단 게시판 두개 -->
 	<div class = "board_div">
 		<div class = "left_board">	<!-- 왼쪽 게시판 -->
-			<h3><a style = "text-decoration: none;" href = "/projectboard/list">자유 게시판 &gt;</a></h3>
+			<h3><a style = "text-decoration: none;" href = "${pageContext.request.contextPath}/list">자유 게시판 &gt;</a></h3>
 			<c:forEach var = "list" items = "${listBoard}">
 				<div class = "board_row_left underline">
 					<div class = "bno">${list.fBno}</div>
@@ -621,7 +621,7 @@
 		</div>
 		
 		<div class = "right_board">	<!-- 오른쪽 게시판 -->
-			<h3><a style = "text-decoration: none;" href = "/projectboard/BUILD_BOARD3">빌드 연구소 &gt;</a></h3>
+			<h3><a style = "text-decoration: none;" href = "${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소 &gt;</a></h3>
 			<c:forEach var = "list" items = "${buildList}">
 				<div class = "board_row_right underline">
 					<div class = "BBno">${list.BBno}</div>
@@ -676,7 +676,7 @@
 			});
 			$(document).on("click", ".board_row_right", function() {
 				let bno = $(this).find('.BBno').text();
-				location.href = '/projectboard/detail?bbno=' + bno;
+				location.href = '${pageContext.request.contextPath}/detail?bbno=' + bno;
 			});
 		});
 	</script>

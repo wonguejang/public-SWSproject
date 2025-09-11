@@ -428,11 +428,11 @@
             <div>
                <ul id="menu_container">
                   <li>
-                  <a href="/projectboard/list">커뮤니티</a>
+                  <a href="${pageContext.request.contextPath}/list">커뮤니티</a>
                      <ul id="sub_menu">
-                        <li><a href="/projectboard/BUILD_BOARD3">빌드 연구소</a></li>
-                        <li><a href="/projectboard/list">자유 게시판</a></li>
-                        <li><a href="/projectboard/patch/patchlist">패치 게시판</a></li>
+                        <li><a href="${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소</a></li>
+                        <li><a href="${pageContext.request.contextPath}/list">자유 게시판</a></li>
+                        <li><a href="${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a></li>
                      </ul>
                   </li>
                </ul>
@@ -480,8 +480,8 @@
       <div id="head_name">
          <h1>커뮤니티</h1>
          <h2>
-            <a href = '/projectboard/BUILD_BOARD3'>빌드 연구소</a>
-            <a href = '/projectboard/list'>자유 게시판</a>
+            <a href = '${pageContext.request.contextPath}/BUILD_BOARD3'>빌드 연구소</a>
+            <a href = '${pageContext.request.contextPath}/list'>자유 게시판</a>
             <a href = '${pageContext.request.contextPath}/patch/patchlist'>패치 게시판</a>
          </h2>
       </div>

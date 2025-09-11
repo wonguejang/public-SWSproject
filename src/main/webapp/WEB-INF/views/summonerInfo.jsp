@@ -931,7 +931,7 @@
 	                                data: { champName: val },
 	                                success: function(res2) {
 	                                    if (res2 === true) {
-	                                    	location.href = '/projectboard/champinoDetail?champName=' + encodeURIComponent(val);
+	                                    	location.href = '${pageContext.request.contextPath}/champinoDetail?champName=' + encodeURIComponent(val);
 	                                    } else {
 	                                        alert('검색 실패 없는 내용입니다.');
 	                                    }
@@ -1080,11 +1080,11 @@
 				<div>
 					<ul class = "menu-container">
 						<li>
-						<a href = "/projectboard/BUILD_BOARD3">커뮤니티</a>
+						<a href = "${pageContext.request.contextPath}/BUILD_BOARD3">커뮤니티</a>
 							<ul class = "sub-menu">
 								<li><a href = "BUILD_BOARD3">빌드 연구소</a></li>
-								<li><a href = "/projectboard/list">자유 게시판</a></li>
-								<li><a href = "/projectboard/patch/patchlist">패치 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/list">자유 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a></li>
 							</ul>
 						</li>
 					</ul>

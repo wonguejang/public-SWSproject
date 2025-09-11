@@ -85,7 +85,7 @@
 	 	<div id="reset_container">
 		   	<h2>비밀번호 초기화</h2>
 		   	<p>비밀번호 초기화 이메일 발송</p>
-		    <form action="/projectboard/sendResetEmail" method="post">
+		    <form action="${pageContext.request.contextPath}/sendResetEmail" method="post">
 		      <p id="email_id">이메일</p>
 		      <input type="email" id="email_input" name="user_id" required>
 		      <button type="submit" id="reset_button">비밀번호 초기화</button>
