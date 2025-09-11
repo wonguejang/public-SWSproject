@@ -36,7 +36,7 @@
                	}
    
                	// ✅ 서버로 로그인 처리 요청
-               	fetch("/projectboard/kakaoLogin", {
+               	fetch("${pageContext.request.contextPath}/kakaoLogin", {
                 	method: "POST",
                  	headers: {
                    		"Content-Type": "application/x-www-form-urlencoded"
@@ -48,7 +48,7 @@
                 	if (result === "success") {
                    		// ✅ 로그인 성공 처리
                    	alert(nickname + "님 로그인 성공!");
-                   	location.href = "/projectboard/";
+                   	location.href = "${pageContext.request.contextPath}/";
                 	} else {
                 		alert("서버 로그인 처리 실패");
                 	}
@@ -74,8 +74,9 @@
 	<!-- 구글 -->
 	<script>
 		function googleLogin() {
-	    	const clientId = '597583037743-pr3mrvadj6qdhtj1v5oo0imcqk5rk5o3.apps.googleusercontent.com';
-		    const redirectUri = 'http://localhost:9090/projectboard/google/callback';
+			console.log("여기냐? 상우야?");
+	    	const clientId = '597583037743-qssr4hbtisfvuddkgpq5t9dco08f1u3q.apps.googleusercontent.com';
+	    	const redirectUri = 'https://swsggwp.co.kr/google/callback';
 		    const responseType = 'code';
 		    const scope = 'email profile';
 		    const accessType = 'offline';
@@ -93,7 +94,7 @@
 		window.addEventListener("message", function(event) {
 	    	if (event.data === "google-login-success") {
 		      alert("Google 로그인 성공!");
-		      location.href = "/projectboard/"; // ✅ 홈으로 강제 이동
+		      location.href = "${pageContext.request.contextPath}/"; // ✅ 홈으로 강제 이동
 	    	}
 	    });
 	</script>

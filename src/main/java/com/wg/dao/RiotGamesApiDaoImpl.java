@@ -209,10 +209,10 @@ public class RiotGamesApiDaoImpl implements RiotGamesApiDao {
 		//for-each문을 돌면서 랭커정보에 들어있는 puuid를 사용해 api를 요청
 		for(SummonerInfoDto dto : rankList) {
 			try {
-				//호출제한이 걸릴 수 있어서 쓰레드 걸어둠
-				if(apiCheck > 0 && apiCheck%20==0) {
-					Thread.sleep(25_000);
-				}
+//				//호출제한이 걸릴 수 있어서 쓰레드 걸어둠
+//				if(apiCheck > 0 && apiCheck%20==0) {
+//					Thread.sleep(25_000);
+//				}
 				//puuid를 담아서 아래 url 요청으로 보내줌
 				String puuid = dto.getPuuid();
 				String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + puuid + "?api_key=" + API_KEY;
@@ -229,6 +229,7 @@ public class RiotGamesApiDaoImpl implements RiotGamesApiDao {
 				dto.setSummonerId((root.get("gameName").asText())+"#"+(root.get("tagLine").asText()));
 				System.out.println((apiCheck + 1) +"소환사 이름 : " + dto.getSummonerId()+"\t포인트 : " +dto.getLeaguePoints() + "\t승률 : " + dto.getWinRate());
 				
+				Thread.sleep(1500);
 				apiCheck++;
 			}catch (HttpClientErrorException.TooManyRequests e) {
 				//생각보다 2초가 짧은건지 여러개의 api요청 연속 실행으로 인한것인지
@@ -236,7 +237,7 @@ public class RiotGamesApiDaoImpl implements RiotGamesApiDao {
 	            System.err.println("429 오류: 잠시 대기합니다.");
 	            try {
 	            	//여유롭게 3초 더줌
-	                Thread.sleep(3000);
+	                Thread.sleep(5000);
 	            } catch (InterruptedException ie) {
 	                ie.printStackTrace();
 	            }
@@ -390,27 +391,5 @@ public class RiotGamesApiDaoImpl implements RiotGamesApiDao {
 		
 		return sqlSession.selectList("RankMapper.RankingList", map1);
 	}
-
-	
-		
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

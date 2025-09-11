@@ -19,7 +19,7 @@
 		function redraw() {
 			$.ajax({
 				type : 'post',
-				url : '/projectboard/getReplyList',
+				url : '${pageContext.request.contextPath}/getReplyList',
 				data : {'bno':bno},
 				dataType : 'json',
 				success : function(reply) {
@@ -71,7 +71,7 @@
 		function check_id_for_draw_delete_btn() {
 			$.ajax({
 				type : 'post',
-				url : '/projectboard/buttonUpDate',
+				url : '${pageContext.request.contextPath}/buttonUpDate',
 				data : {'id' : id, 'bno' : bno},
 				success : function(response) { //response가 true이면 -> 작성자랑 로그인한 사람이 같으면
 					if(response){
@@ -144,7 +144,7 @@
 				//댓글 달기 
 				$.ajax({
 					type : 'post',
-					url : '/projectboard/insertReply',
+					url : '${pageContext.request.contextPath}/insertReply',
 					data : {"content": comment, "bno": bno},
 					success : function(response) { 
 						//db에 insert 완료 되면 아래가 실행
@@ -193,12 +193,12 @@
 				//게시글 삭제 권한확인 후 삭제 또는 거부
 				$.ajax({
 					type : 'post',
-					url : '/projectboard/deleteContentById',
+					url : '${pageContext.request.contextPath}/deleteContentById',
 					data : {'bno' : bno, 'id' : id},
 					success : function(response) {
 						if(response){
 							alert("게시글이 삭제되었습니다.");
-							location.href = "/projectboard/list"
+							location.href = "${pageContext.request.contextPath}/list"
 						}else {
 							alert("게시글 삭제 권한이 없습니다.");
 						}
@@ -775,11 +775,11 @@
 				<div id = "menuList">
 					<ul class = "menu-container">
 						<li>
-						<a href = "/projectboard/BUILD_BOARD3" id = "menu-hover">커뮤니티</a>
+						<a href = "${pageContext.request.contextPath}/BUILD_BOARD3" id = "menu-hover">커뮤니티</a>
 							<ul class = "sub-menu">
-								<li><a href = "/projectboard/BUILD_BOARD3">빌드 연구소</a></li>
-								<li><a href = "/projectboard/list">자유 게시판</a></li>
-								<li><a href = "/projectboard/patch/patchlist">패치 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소</a></li>
+								<li><a href = "${pageContext.request.contextPath}/list">자유 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a></li>
 							</ul>
 						</li>
 					</ul>

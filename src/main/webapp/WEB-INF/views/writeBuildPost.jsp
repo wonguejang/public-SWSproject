@@ -742,7 +742,7 @@
 	                                data: { champName: val },
 	                                success: function(res2) {
 	                                    if (res2 === true) {
-	                                    	location.href = '/projectboard/champinoDetail?champName=' + encodeURIComponent(val);
+	                                    	location.href = '${pageContext.request.contextPath}/champinoDetail?champName=' + encodeURIComponent(val);
 	                                    } else {
 	                                        alert('잘못 입력하셨습니다.');
 	                                    }
@@ -879,11 +879,11 @@
 				<div>
 					<ul class = "menu-container">
 						<li>
-						<a href = "/projectboard/BUILD_BOARD3">커뮤니티</a>
+						<a href = "${pageContext.request.contextPath}/BUILD_BOARD3">커뮤니티</a>
 							<ul class = "sub-menu">
-								<li><a href = "/projectboard/BUILD_BOARD3">빌드 연구소</a></li>
-								<li><a href = "/projectboard/list">자유 게시판</a></li>
-								<li><a href = "/projectboard/patch/patchlist">패치 게시판</a>
+								<li><a href = "${pageContext.request.contextPath}/BUILD_BOARD3">빌드 연구소</a></li>
+								<li><a href = "${pageContext.request.contextPath}/list">자유 게시판</a></li>
+								<li><a href = "${pageContext.request.contextPath}/patch/patchlist">패치 게시판</a>
 							</ul>
 						</li>
 					</ul>
@@ -913,9 +913,9 @@
 			<div id = "sub_menu_inner">
 				<div>커뮤니티</div>
 				<div>
-					<div id="자유"><a href = "/projectboard/list" class="menu-container">자유 게시판</a></div>
+					<div id="자유"><a href = "${pageContext.request.contextPath}/list" class="menu-container">자유 게시판</a></div>
 					<div id="빌드"><a href = "BUILD_BOARD3" class="menu-container">빌드 게시판</a></div>
-					<div id="패치"><a href = "/projectboard/patch/patchlist" class="menu-container">패치 게시판</a></div>
+					<div id="패치"><a href = "${pageContext.request.contextPath}/patch/patchlist" class="menu-container">패치 게시판</a></div>
 				</div>
 			</div>
 		</div>
