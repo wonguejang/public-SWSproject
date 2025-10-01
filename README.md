@@ -102,6 +102,23 @@ Spring MVC + Oracle DB 기반으로 제작되었으며, 자유게시판·패치�
 
 ---
 
+
+---
+
+## 🌍 배포 주소 (Demo URL)
+- **서비스 URL**: [https://swsggwp.co.kr](https://swsggwp.co.kr)  
+- 테스트 계정  
+  - ID: `test@test.com`  
+  - PW: `1234`  
+
+---
+
+## 📑 프로젝트 문서
+- **API 명세서 (Notion)**: [[API 명세서](https://www.notion.so/SWS-Community-Web-Project-247e75a00e2f8000976bdf7f171c43a0)]  
+
+
+---
+
 ## 🚀 실행 방법
 ```bash
 # 1. 프로젝트 클론
