@@ -109,8 +109,10 @@ Spring MVC + Oracle DB 기반으로 제작되었으며, 자유게시판·패치�
 - **서비스 URL**: [https://swsggwp.co.kr](https://swsggwp.co.kr)  
 - 테스트 계정  
   - ID: `test@test.com`  
-  - PW: `1234`  
-
+  - PW: `1234`
+- ADMIN 계정
+  - ID: `원규@test.com` 
+  - PW: `1234`
 ---
 
 ## 📑 프로젝트 문서
